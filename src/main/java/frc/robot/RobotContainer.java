@@ -100,9 +100,9 @@ public class RobotContainer {
     driverController.b().whileTrue(new ResetOdometry(gyro, driveSubsystem));
 
 
-    driverController.povUp().onTrue((new Turn(gyro, -90.0, driveSubsystem))
-                            .andThen(new WaitCommand(1))
-                            .andThen(buttonBoundPath("Center Outpost 2.5")));
+    //driverController.povUp().onTrue((new Turn(gyro, -90.0, driveSubsystem))
+    //                        .andThen(new WaitCommand(1))
+    //                        .andThen(buttonBoundPath("Center Outpost 2.5")));
 
     // Set the default command for the drive subsystem to the command provided by
     // factory with the values provided by the joystick axes on the driver
@@ -124,7 +124,7 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-   public Command buttonBoundPath(String path1) {
+   /*public Command buttonBoundPath(String path1) {
       try {
       this.path1 = PathPlannerPath.fromPathFile(path1);
       // this.path2 = PathPlannerPath.fromPathFile(path2);
@@ -136,7 +136,7 @@ public class RobotContainer {
     }
 
     return new SequentialCommandGroup(AutoBuilder.followPath(this.path1));
-  }
+  }*/
 
   public void registerNamedCommands() {
     NamedCommands.registerCommand("Intake", new Intake(fuelSubsystem));
