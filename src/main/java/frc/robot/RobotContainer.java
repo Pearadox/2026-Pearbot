@@ -27,6 +27,7 @@ import com.studica.frc.AHRS.NavXComType;
 
 import frc.robot.commands.Drive;
 import frc.robot.commands.Eject;
+import frc.robot.commands.ExampleAuto;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Launch;
 import frc.robot.commands.LaunchSequence;
@@ -71,6 +72,7 @@ public class RobotContainer {
 
     // Pathplanner
     autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser.addOption("Example Auto", new ExampleAuto(driveSubsystem, fuelSubsystem));
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
