@@ -6,8 +6,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,52 +18,61 @@ import static frc.robot.Constants.FuelConstants.*;
 
 public class CANFuelSubsystem extends SubsystemBase {
   private final SparkMax feederRoller;
-  private final SparkMax intakeLauncherRoller;
+  private final SparkMax intakeRoller;
+  private final SparkFlex launcherRoller;
 
-  /** Creates a new CANBallSubsystem. */
+  /** Creates a new CANFuelSubsystem. */
   public CANFuelSubsystem() {
-    // create brushed motors for each of the motors on the launcher mechanism
-    intakeLauncherRoller = new SparkMax(INTAKE_LAUNCHER_MOTOR_ID, MotorType.kBrushless);
+    // Initialize motors
+    intakeRoller = new SparkMax(INTAKE_MOTOR_ID, MotorType.kBrushless);
     feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushless);
+    launcherRoller = new SparkFlex(LAUNCHER_MOTOR_ID, MotorType.kBrushless);
 
-    // create the configuration for the feeder roller, set a current limit and apply
-    // the config to the controller
+    // Feeder Motor Configuration
     SparkMaxConfig feederConfig = new SparkMaxConfig();
     feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
     feederRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // create the configuration for the launcher roller, set a current limit, set
-    // the motor to inverted so that positive values are used for both intaking and
-    // launching, and apply the config to the controller
-    SparkMaxConfig launcherConfig = new SparkMaxConfig();
-    launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
-    intakeLauncherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // Launcher Motor 1 Configuration (SparkMax)
+    SparkMaxConfig intakeConfig = new SparkMaxConfig();
+    intakeConfig.smartCurrentLimit(INTAKE_MOTOR_CURRENT_LIMIT);
+    intakeRoller.configure(intakeConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // put default values for various fuel operations onto the dashboard
-    // all commands using this subsystem pull values from the dashbaord to allow
-    // you to tune the values easily, and then replace the values in Constants.java
-    // with your new values. For more information, see the Software Guide.
+    // Launcher Motor 2 Configuration (SparkFlex)
+    SparkFlexConfig launcherconfig = new SparkFlexConfig();
+    launcherconfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
+    launcherRoller.configure(launcherconfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    // Dashboard tuning values
     SmartDashboard.putNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE);
     SmartDashboard.putNumber("Intaking intake roller value", INTAKING_INTAKE_VOLTAGE);
     SmartDashboard.putNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE);
-    SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE);
+    SmartDashboard.putNumber("Launching intake roller value", INTAKE_LAUNCHER_VOLTAGE);
     SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE);
+    SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE);
+
   }
 
-  // A method to set the voltage of the intake roller
-  public void setIntakeLauncherRoller(double voltage) {
-    intakeLauncherRoller.setVoltage(voltage);
+  // Method to set voltage for the intake/launcher motor
+  public void setIntakeRoller(double voltage) {
+    intakeRoller.setVoltage(voltage);
   }
 
-  // A method to set the voltage of the intake roller
+  // Method to set voltage for the feeder motor
   public void setFeederRoller(double voltage) {
     feederRoller.setVoltage(voltage);
   }
 
-  // A method to stop the rollers
+  // Method to set voltage for the second launcher motor (Spark Flex)
+  public void setLauncherRoller(double voltage) {
+    launcherRoller.setVoltage(voltage);
+  }
+
+  // Method to stop all rollers
   public void stop() {
     feederRoller.set(0);
-    intakeLauncherRoller.set(0);
+    intakeRoller.set(0);
+    launcherRoller.setVoltage(IDLE_LAUNCHER_VOLTAGE); 
   }
 
   @Override

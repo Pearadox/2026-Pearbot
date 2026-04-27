@@ -18,7 +18,7 @@ public class ExampleAuto extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
     // Drive backwards for 1.5 seconds 
-    new AutoDrive(driveSubsystem,0.25,  0.0).withTimeout(7.5),
+    new AutoDrive(driveSubsystem,0.25,  0.0).withTimeout(8.5),
     // Spin up the launcher for 1 second and then launch balls for 7 seconds
     new LaunchSequence(ballSubsystem).withTimeout(7)
     );
