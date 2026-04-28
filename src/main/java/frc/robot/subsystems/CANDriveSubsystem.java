@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.math.estimator.PoseEstimator;
@@ -86,9 +87,10 @@ public class CANDriveSubsystem extends SubsystemBase {
     // battery). The current limit helps prevent tripping
     // breakers.
     SparkMaxConfig sparkConfig = new SparkMaxConfig();
+    sparkConfig.idleMode(IdleMode.kBrake);
     sparkConfig.voltageCompensation(12);
     sparkConfig.smartCurrentLimit(DRIVE_MOTOR_CURRENT_LIMIT);
-
+    
     // Set configuration to follow each leader and then apply it to corresponding
     // follower. Resetting in case a new controller is swapped
     // in and persisting in case of a controller reset due to breaker trip
@@ -96,8 +98,9 @@ public class CANDriveSubsystem extends SubsystemBase {
     leftFollower.configure(sparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     sparkConfig.follow(rightLeader);
     rightFollower.configure(sparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+    
     // Remove following, then apply config to right leader
+  
     sparkConfig.inverted(true);
     sparkConfig.disableFollowerMode();
     rightLeader.configure(sparkConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
